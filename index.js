@@ -4,6 +4,7 @@ const getUser = require('./lib/getUser');
 const getTokenFromRequest = require('./lib/getTokenFromRequest');
 const setCookie = require('./lib/setCookie');
 const scheme = require('./lib/scheme');
+const routes = require('./lib/routes');
 
 const defaults = {
   host: '',
@@ -11,7 +12,10 @@ const defaults = {
   cookie: {
     name: 'token',
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
-    setRoute: '/login'
+  },
+  routes: {
+    login: '/login',
+    logout: '/logout'
   },
   strategy: {
     name: 'microauth',
@@ -41,21 +45,10 @@ exports.register = function(server, options, next) {
     server.auth.strategy(config.strategy.name, 'microauth', config.strategy.mode, {});
   }
 
-  if (config.cookie.setRoute) {
-    server.route({
-      path: config.cookie.setRoute,
-      method: 'get',
-      config: {
-        auth: false
-      },
-      handler(request, reply) {
-        const token = request.query.token;
-        const nextUrl = request.query.next || '/';
-        request.server.microauth.setCookie(reply, token);
-        reply.redirect(nextUrl);
-      }
-    });
+  if (config.routes) {
+    routes(server, config);
   }
+  next();
 };
 
 exports.register.attributes = {
