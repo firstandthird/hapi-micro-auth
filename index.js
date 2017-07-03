@@ -38,7 +38,7 @@ exports.register = function(server, options, next) {
   server.auth.scheme('microauth', scheme);
 
   if (config.strategy) {
-    server.auth.strategy(config.strategy.name, config.strategy.mode, {});
+    server.auth.strategy(config.strategy.name, 'microauth', config.strategy.mode, {});
   }
 
   if (config.cookie.setRoute) {
