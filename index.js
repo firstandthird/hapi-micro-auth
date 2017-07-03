@@ -43,7 +43,7 @@ exports.register = function(server, options, next) {
 
   server.decorate('server', 'microauth', expose);
 
-  server.auth.scheme('microauth', scheme);
+  server.auth.scheme('microauth', scheme.bind(config));
 
   if (config.strategy) {
     server.auth.strategy(config.strategy.name, 'microauth', config.strategy.mode, {});
