@@ -8,6 +8,7 @@ const routes = require('./lib/routes');
 
 const defaults = {
   host: '',
+  hostRedirect: null,
   queryKey: 'token',
   cookie: {
     name: 'token',
@@ -28,6 +29,9 @@ exports.register = function(server, options, next) {
 
   if (!config.host) {
     return next(new Error('host must be set'));
+  }
+  if (!config.hostRedirect) {
+    config.hostRedirect = config.host;
   }
 
   const expose = {
