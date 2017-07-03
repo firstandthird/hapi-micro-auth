@@ -20,7 +20,8 @@ const defaults = {
   },
   strategy: {
     name: 'microauth',
-    mode: true
+    mode: true,
+    redirectTo: '/login'
   }
 };
 
