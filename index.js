@@ -19,6 +19,13 @@ const defaults = {
     login: '/login',
     logout: '/logout'
   },
+  cache: {
+    segment: 'microauth-sessions',
+    expiresIn: 1 * 60 * 60 * 1000, //1 hour
+    staleIn: 5 * 60 * 1000, //5 minutes
+    staleTimeout: 100,
+    generateTimeout: 5000
+  },
   strategy: {
     name: 'microauth',
     mode: true,
@@ -35,11 +42,16 @@ exports.register = function(server, options, next) {
     config.hostRedirect = config.host;
   }
 
+  config.cache.generateFunc = (id, done) => {
+    getMe.bind(config)(id, done);
+  };
   const expose = {
+    config,
     getMe: getMe.bind(config),
     getUser: getUser.bind(config),
     getTokenFromRequest: getTokenFromRequest.bind(config),
-    setCookie: setCookie.bind(config)
+    setCookie: setCookie.bind(config),
+    userCache: server.cache(config.cache)
   };
 
   server.decorate('server', 'microauth', expose);
