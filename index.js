@@ -50,9 +50,11 @@ exports.register = function(server, options, next) {
     getMe: getMe.bind(config),
     getUser: getUser.bind(config),
     getTokenFromRequest: getTokenFromRequest.bind(config),
-    setCookie: setCookie.bind(config),
-    userCache: server.cache(config.cache)
+    setCookie: setCookie.bind(config)
   };
+  if (!config.noCache) {
+    expose.userCache = server.cache(config.cache);
+  }
 
   server.decorate('server', 'microauth', expose);
 
