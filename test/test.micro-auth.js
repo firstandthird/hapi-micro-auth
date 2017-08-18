@@ -142,7 +142,7 @@ tap.test('protects route from invalid login', (t) => {
   });
 });
 
-tap.test('supports turning off cache with cacheOn', (t) => {
+tap.test('supports turning off cache with cacheEnabled', (t) => {
   async.autoInject({
     init(done) {
       const init = new Hapi.Server();
@@ -158,7 +158,7 @@ tap.test('supports turning off cache with cacheOn', (t) => {
         options: {
           host: 'http://localhost:8081',
           routes: true,
-          cacheOn: false
+          cacheEnabled: false
         }
       }, (err) => {
         if (err) {
