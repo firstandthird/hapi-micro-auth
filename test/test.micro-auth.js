@@ -2,7 +2,7 @@ const tap = require('tap');
 const async = require('async');
 const Hapi = require('hapi');
 const plugin = require('../index.js');
-/*
+
 tap.test('registers the plugin', (t) => {
   async.autoInject({
     init(done) {
@@ -48,7 +48,7 @@ tap.test('registers the plugin', (t) => {
     t.end();
   });
 });
-*/
+
 tap.test('protects route from invalid login', (t) => {
   async.autoInject({
     init(done) {
@@ -78,7 +78,6 @@ tap.test('protects route from invalid login', (t) => {
         path: '/main',
         method: 'get',
         handler(request, reply) {
-          console.log('main called')
           // this should not be called:
           t.fail();
         }
@@ -87,9 +86,8 @@ tap.test('protects route from invalid login', (t) => {
         path: '/main2',
         method: 'get',
         handler(request, reply) {
-          console.log('main2 called')
           // this should be called:
-          t.pass();
+          reply(null, 'it is okay');
         }
       });
       register.start(() => {
@@ -125,14 +123,10 @@ tap.test('protects route from invalid login', (t) => {
         url: '/main2?token=aToken',
         method: 'get',
       }, (response) => {
-        console.log('main2')
         done(null, response);
       });
     },
     verify(getMain, getMain2, done) {
-      console.log('here')
-      console.log(getMain)
-      console.log(getMain2)
       t.equal(getMain.statusCode, 302, 'redirects when route accessed without credentials');
       t.equal(getMain2.statusCode, 200, 'permits access with credentials');
       done();
@@ -147,7 +141,101 @@ tap.test('protects route from invalid login', (t) => {
     t.end();
   });
 });
-/*
+
+tap.test('supports turning off cache with cacheOn', (t) => {
+  async.autoInject({
+    init(done) {
+      const init = new Hapi.Server();
+      init.connection({
+        host: 'localhost',
+        port: 8080
+      });
+      return done(null, init);
+    },
+    register(init, done) {
+      init.register({
+        register: plugin,
+        options: {
+          host: 'http://localhost:8081',
+          routes: true,
+          cacheOn: false
+        }
+      }, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        return done(err, init);
+      });
+    },
+    server(register, done) {
+      register.route({
+        path: '/main',
+        method: 'get',
+        handler(request, reply) {
+          // this should not be called:
+          t.fail();
+        }
+      });
+      register.route({
+        path: '/main2',
+        method: 'get',
+        handler(request, reply) {
+          // this should be called:
+          reply(null, 'it is okay');
+        }
+      });
+      register.start(() => {
+        return done(null, register);
+      });
+    },
+    testServer(done) {
+      const testServer = new Hapi.Server();
+      testServer.connection({
+        host: 'localhost',
+        port: 8081
+      });
+      testServer.route({
+        path: '/api/me/{token}',
+        method: 'get',
+        handler(request, reply) {
+          t.equal(request.params.token, 'aToken', 'token passed to /api/me matches');
+          return reply(null, { _id: '1234' });
+        }
+      });
+      testServer.start(() => done(null, testServer));
+    },
+    getMain(server, testServer, done) {
+      server.inject({
+        url: '/main',
+        method: 'get',
+      }, (response) => {
+        return done(null, response);
+      });
+    },
+    getMain2(server, testServer, done) {
+      server.inject({
+        url: '/main2?token=aToken',
+        method: 'get',
+      }, (response) => {
+        done(null, response);
+      });
+    },
+    verify(getMain, getMain2, done) {
+      t.equal(getMain.statusCode, 302, 'redirects when route accessed without credentials');
+      t.equal(getMain2.statusCode, 200, 'permits access with credentials');
+      done();
+    },
+    stop(server, verify, done) {
+      server.stop(done);
+    },
+    stopTest(testServer, verify, done) {
+      testServer.stop(done);
+    }
+  }, (err) => {
+    t.end();
+  });
+});
+
 tap.test('plugin provides getMe ', (t) => {
   async.autoInject({
     init(done) {
@@ -371,9 +459,9 @@ tap.test('plugin provides setCookie ', (t) => {
     setCookie(server, done) {
       server.microauth.setCookie({
         state(cookieName, token, cache) {
-          t.equal(cookieName, 'token');
-          t.equal(token, 'broken');
-          t.equal(cache.ttl, 2592000000);
+          t.equal(cookieName, 'token', 'sets cookie name correctly');
+          t.equal(token, 'broken', 'sets cookie value correctly');
+          t.equal(cache.ttl, 2592000000, 'sets cookie ttl correctly');
           done();
         } }, 'broken');
     },
@@ -384,4 +472,3 @@ tap.test('plugin provides setCookie ', (t) => {
     t.end();
   });
 });
-*/
