@@ -7,6 +7,7 @@ const scheme = require('./lib/scheme');
 const routes = require('./lib/routes');
 
 const defaults = {
+  verbose: false,
   host: '',
   hostRedirect: null,
   queryKey: 'token',
@@ -44,6 +45,9 @@ exports.register = function(server, options, next) {
   }
 
   config.cache.generateFunc = (id, done) => {
+    if (config.verbose) {
+      server.log(['hapi-micro-auth', 'cache-miss'], `Fetching user ${id}`);
+    }
     getMe.bind(config)(id, done);
   };
   const expose = {
