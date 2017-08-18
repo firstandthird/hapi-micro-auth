@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/firstandthird/hapi-micro-auth#readme",
   "dependencies": {
-    "aug": "^1.0.2",
+    "aug": "^2.0.0",
     "boom": "^5.1.0",
     "wreck": "^12.2.2"
   },

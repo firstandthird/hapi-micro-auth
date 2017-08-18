@@ -35,7 +35,7 @@ const defaults = {
 };
 
 exports.register = function(server, options, next) {
-  const config = aug('defaults', defaults, options);
+  const config = aug(defaults, options);
 
   if (!config.host) {
     return next(new Error('host must be set'));
