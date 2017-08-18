@@ -4,7 +4,7 @@
   "description": "Hapi plugin for micro-auth",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tap test"
   },
   "repository": {
     "type": "git",
@@ -28,9 +28,12 @@
     "wreck": "^12.2.2"
   },
   "devDependencies": {
+    "async": "^2.5.0",
     "eslint": "^3.19.0",
     "eslint-config-firstandthird": "^3.3.0",
-    "eslint-plugin-import": "^2.6.1"
+    "eslint-plugin-import": "^2.6.1",
+    "hapi": "^16.5.2",
+    "tap": "^10.7.2"
   },
   "eslintConfig": {
     "extends": "firstandthird"

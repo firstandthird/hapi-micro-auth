@@ -19,6 +19,7 @@ const defaults = {
     login: '/login',
     logout: '/logout'
   },
+  cacheEnabled: true,
   cache: {
     segment: 'microauth-sessions',
     expiresIn: 1 * 60 * 60 * 1000, //1 hour
@@ -50,9 +51,11 @@ exports.register = function(server, options, next) {
     getMe: getMe.bind(config),
     getUser: getUser.bind(config),
     getTokenFromRequest: getTokenFromRequest.bind(config),
-    setCookie: setCookie.bind(config),
-    userCache: server.cache(config.cache)
+    setCookie: setCookie.bind(config)
   };
+  if (config.cacheEnabled) {
+    expose.userCache = server.cache(config.cache);
+  }
 
   server.decorate('server', 'microauth', expose);
 
