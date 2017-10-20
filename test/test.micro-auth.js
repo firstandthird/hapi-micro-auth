@@ -557,3 +557,87 @@ tap.test('supports redirectTo', (t) => {
     t.end();
   });
 });
+
+tap.test('supports try mode with no redirect', (t) => {
+  async.autoInject({
+    init(done) {
+      const init = new Hapi.Server();
+      init.connection({
+        host: 'localhost',
+        port: 8080
+      });
+      return done(null, init);
+    },
+    register(init, done) {
+      init.register({
+        register: plugin,
+        options: {
+          host: 'http://localhost:8081',
+          routes: true,
+          redirectTo: '/test',
+          redirectOnTry: false,
+          strategy: {
+            name: 'micro-auth',
+            mode: 'try'
+          }
+        }
+      }, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        return done(err, init);
+      });
+    },
+    server(register, done) {
+      register.route({
+        path: '/main',
+        method: 'get',
+        handler(request, reply) {
+          // this should be called:
+          t.equal(request.auth.isAuthenticated, false, 'No authentication passed');
+          reply('Hi There');
+        }
+      });
+      register.start(() => {
+        return done(null, register);
+      });
+    },
+    testServer(done) {
+      const testServer = new Hapi.Server();
+      testServer.connection({
+        host: 'localhost',
+        port: 8081
+      });
+      testServer.route({
+        path: '/api/me/{token}',
+        method: 'get',
+        handler(request, reply) {
+          t.equal(request.params.token, 'aToken', 'token passed to /api/me matches');
+          return reply(null, { _id: '1234' });
+        }
+      });
+      testServer.start(() => done(null, testServer));
+    },
+    getMain(server, testServer, done) {
+      server.inject({
+        url: '/main',
+        method: 'get',
+      }, (response) => {
+        return done(null, response);
+      });
+    },
+    verify(getMain, done) {
+      t.equal(getMain.payload, 'Hi There', 'Returns proper payload');
+      t.equal(getMain.statusCode, 200, 'Returns success');
+      done();
+    },
+    stop(server, verify, done) {
+      server.stop(done);
+    },
+    stopTest(testServer, verify, done) {
+      testServer.stop(done);
+    }
+  }, (err) => {
+    t.end();
+  });
+});
