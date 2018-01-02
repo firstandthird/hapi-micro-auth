@@ -31,51 +31,54 @@ const defaults = {
   },
   strategy: {
     name: 'microauth',
-    mode: true,
+    mode: 'required'
   }
 };
 
-exports.register = function(server, options, next) {
-  const config = aug(defaults, options);
+exports.plugin = {
+  async register(server, options) {
+    const config = aug(defaults, options);
 
-  if (!config.host) {
-    return next(new Error('host must be set'));
-  }
-  if (!config.hostRedirect) {
-    config.hostRedirect = config.host;
-  }
-
-  config.cache.generateFunc = (id, done) => {
-    if (config.verbose) {
-      server.log(['hapi-micro-auth', 'cache-miss'], `Fetching user ${id}`);
+    if (!config.host) {
+      throw new Error('host must be set');
+      return;
     }
-    getMe.bind(config)(id, done);
-  };
-  const expose = {
-    config,
-    getMe: getMe.bind(config),
-    getUser: getUser.bind(config),
-    getTokenFromRequest: getTokenFromRequest.bind(config),
-    setCookie: setCookie.bind(config)
-  };
-  if (config.cacheEnabled) {
-    expose.userCache = server.cache(config.cache);
-  }
+    if (!config.hostRedirect) {
+      config.hostRedirect = config.host;
+    }
 
-  server.decorate('server', 'microauth', expose);
+    config.cache.generateFunc = async (id, done) => {
+      if (config.verbose) {
+        server.log(['hapi-micro-auth', 'cache-miss'], `Fetching user ${id}`);
+      }
+      const user = await getMe.bind(config)(id);
+      return user;
+    };
 
-  server.auth.scheme('microauth', scheme.bind(config));
+    const expose = {
+      config,
+      getMe: getMe.bind(config),
+      getUser: getUser.bind(config),
+      getTokenFromRequest: getTokenFromRequest.bind(config),
+      setCookie: setCookie.bind(config)
+    };
 
-  if (config.strategy) {
-    server.auth.strategy(config.strategy.name, 'microauth', config.strategy.mode, {});
-  }
+    if (config.cacheEnabled) {
+      expose.userCache = server.cache(config.cache);
+    }
 
-  if (config.routes) {
-    routes(server, config);
-  }
-  next();
-};
+    server.decorate('server', 'microauth', expose);
 
-exports.register.attributes = {
+    server.auth.scheme('microauth', scheme.bind(config));
+
+    if (config.strategy) {
+      server.auth.strategy(config.strategy.name, 'microauth');
+      server.auth.default({ strategy: config.strategy.name, mode: config.strategy.mode } );
+    }
+
+    if (config.routes) {
+      routes(server, config);
+    }
+  },
   pkg: require('./package.json')
 };

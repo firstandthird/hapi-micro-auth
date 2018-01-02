@@ -4,7 +4,8 @@
   "description": "Hapi plugin for micro-auth",
   "main": "index.js",
   "scripts": {
-    "test": "tap test"
+    "test": "lab --leaks -e test -c",
+    "coveralls": "lab -r lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -24,16 +25,17 @@
   "homepage": "https://github.com/firstandthird/hapi-micro-auth#readme",
   "dependencies": {
     "aug": "^2.0.0",
-    "boom": "^5.1.0",
-    "wreck": "^12.2.2"
+    "boom": "^7.1.1",
+    "wreck": "^14.0.2"
   },
   "devDependencies": {
-    "async": "^2.5.0",
+    "code": "^5.1.2",
+    "coveralls": "^3.0.0",
     "eslint": "^3.19.0",
     "eslint-config-firstandthird": "^3.3.0",
     "eslint-plugin-import": "^2.6.1",
-    "hapi": "^16.5.2",
-    "tap": "^10.7.2"
+    "hapi": "^17.2.0",
+    "lab": "^15.1.2"
   },
   "eslintConfig": {
     "extends": "firstandthird"
