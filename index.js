@@ -3,6 +3,8 @@ const getMe = require('./lib/getMe');
 const getUser = require('./lib/getUser');
 const getTokenFromRequest = require('./lib/getTokenFromRequest');
 const setCookie = require('./lib/setCookie');
+const updateSettings = require('./lib/updateSettings');
+const updateMeta = require('./lib/updateMeta');
 const scheme = require('./lib/scheme');
 const routes = require('./lib/routes');
 
@@ -56,6 +58,8 @@ exports.plugin = {
     };
 
     const expose = {
+      updateMeta,
+      updateSettings,
       config,
       getMe: getMe.bind(config),
       getUser: getUser.bind(config),

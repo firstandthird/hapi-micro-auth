@@ -27,6 +27,26 @@ lab.experiment('server actions', () => {
       }
     });
 
+    authServer.route({
+      path: '/api/users/meta',
+      method: 'put',
+      handler(r, h) {
+        code.expect(r.query.token).to.equal('anotherToken');
+        code.expect(r.payload.meta1).to.equal('metatron');
+        return { _id: '5678' };
+      }
+    });
+
+    authServer.route({
+      path: '/api/users/settings',
+      method: 'put',
+      handler(r, h) {
+        code.expect(r.query.token).to.equal('anotherToken');
+        code.expect(r.payload.meta1).to.equal('setatron');
+        return { _id: '5678' };
+      }
+    });
+
     await authServer.start();
   });
   lab.after(async() => {
@@ -89,7 +109,7 @@ lab.experiment('server actions', () => {
         return 'nothing here';
       }
     });
-    
+
     server.route({
       path: '/main-two',
       method: 'get',
@@ -102,14 +122,14 @@ lab.experiment('server actions', () => {
 
     const result = await server.inject({ url: '/main' });
     code.expect(result.statusCode).to.equal(302);
-    
+
     const resultTwo = await server.inject({ url: '/main-two?token=aToken' });
     code.expect(resultTwo.statusCode).to.equal(200);
 
     await server.stop();
 
   });
-  
+
   lab.test('it should support try mode', async() => {
     const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
     await server.register({
@@ -153,7 +173,7 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    
+
     const user = await server.microauth.getMe('aToken');
     code.expect(user._id).to.equal('1234');
   });
@@ -168,7 +188,7 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    
+
     const user = await server.microauth.getUser('anotherToken');
     code.expect(user._id).to.equal('5678');
   });
@@ -183,7 +203,7 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    
+
     const token = server.microauth.getTokenFromRequest({
       query: {
         token: 'token1'
@@ -238,14 +258,41 @@ lab.experiment('server actions', () => {
         return 'nothing here';
       }
     });
-    
+
     await server.start();
 
     const result = await server.inject({ url: '/main' });
     code.expect(result.statusCode).to.equal(302);
     code.expect(result.headers.location).to.equal('/test?next=%2Fmain');
-    
+
     await server.stop();
   });
 
+  lab.test('it should provide updateMeta function', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        routes: true,
+        cacheEnabled: false
+      }
+    });
+    const result = await server.microauth.updateMeta('anotherToken', { meta1: 'metatron' });
+    code.expect(result._id).to.equal('5678');
+  });
+
+  lab.test('it should provide updateMeta function', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        routes: true,
+        cacheEnabled: false
+      }
+    });
+    const result = await server.microauth.updateSettings('anotherToken', { meta1: 'setatron' });
+    code.expect(result._id).to.equal('5678');
+  });
 });
