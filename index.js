@@ -34,16 +34,16 @@ const defaults = {
   strategy: {
     name: 'microauth',
     mode: 'required'
-  }
+  },
+  noRedirect: false
 };
 
 exports.plugin = {
-  async register(server, options) {
+  register(server, options) {
     const config = aug(defaults, options);
 
     if (!config.host) {
       throw new Error('host must be set');
-      return;
     }
     if (!config.hostRedirect) {
       config.hostRedirect = config.host;
@@ -77,7 +77,7 @@ exports.plugin = {
 
     if (config.strategy) {
       server.auth.strategy(config.strategy.name, 'microauth');
-      server.auth.default({ strategy: config.strategy.name, mode: config.strategy.mode } );
+      server.auth.default({ strategy: config.strategy.name, mode: config.strategy.mode });
     }
 
     if (config.routes) {
