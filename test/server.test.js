@@ -268,6 +268,34 @@ lab.experiment('server actions', () => {
     await server.stop();
   });
 
+  lab.test('it should support noRedirect', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        routes: true,
+        noRedirect: true
+      }
+    });
+
+    server.route({
+      path: '/main',
+      method: 'get',
+      handler(r, h) {
+        code.fail('this should be protected');
+        return 'nothing here';
+      }
+    });
+
+    await server.start();
+
+    const result = await server.inject({ url: '/main' });
+    code.expect(result.statusCode).to.equal(401);
+
+    await server.stop();
+  });
+
   lab.test('it should provide updateMeta function', async() => {
     const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
     await server.register({
