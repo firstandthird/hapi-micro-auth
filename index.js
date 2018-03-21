@@ -2,6 +2,7 @@ const aug = require('aug');
 const getMe = require('./lib/getMe');
 const getUser = require('./lib/getUser');
 const getTokenFromRequest = require('./lib/getTokenFromRequest');
+const updateLastSessionDate = require('./lib/updateLastSessionDate');
 const setCookie = require('./lib/setCookie');
 const updateSettings = require('./lib/updateSettings');
 const updateMeta = require('./lib/updateMeta');
@@ -60,6 +61,7 @@ exports.plugin = {
     const expose = {
       updateMeta,
       updateSettings,
+      updateLastSessionDate,
       config,
       getMe: getMe.bind(config),
       getUser: getUser.bind(config),

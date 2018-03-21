@@ -6,7 +6,7 @@ const code = require('code');
 
 const Hapi = require('hapi');
 
-lab.experiment('plugin registration', () => { 
+lab.experiment('plugin registration', () => {
   lab.test('it should register if passed valid options', async() => {
     const server = new Hapi.Server();
     try {
@@ -24,6 +24,9 @@ lab.experiment('plugin registration', () => {
     code.expect(server.microauth.getMe).to.be.a.function();
     code.expect(server.microauth.getUser).to.be.a.function();
     code.expect(server.microauth.setCookie).to.be.a.function();
+    code.expect(server.microauth.updateLastSessionDate).to.be.a.function();
+    code.expect(server.microauth.updateMeta).to.be.a.function();
+    code.expect(server.microauth.updateSettings).to.be.a.function();
     code.expect(server.microauth.getTokenFromRequest).to.be.a.function();
     code.expect(server.microauth.userCache).to.be.an.object();
 
