@@ -18,6 +18,12 @@ const defaults = {
     name: 'token',
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
   },
+  sessionDateCookie: {
+    name: 'lastSessionDateSet',
+    ttl: null,
+    isSecure: false,
+    isSameSite: false
+  },
   redirectOnTry: true,
   redirectTo: false, // defaults to routes.login w/ host redirect
   routes: {
