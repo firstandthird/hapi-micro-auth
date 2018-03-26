@@ -2,6 +2,7 @@ const aug = require('aug');
 const getMe = require('./lib/getMe');
 const getUser = require('./lib/getUser');
 const getTokenFromRequest = require('./lib/getTokenFromRequest');
+const updateLastSessionDate = require('./lib/updateLastSessionDate');
 const setCookie = require('./lib/setCookie');
 const updateSettings = require('./lib/updateSettings');
 const updateMeta = require('./lib/updateMeta');
@@ -16,6 +17,12 @@ const defaults = {
   cookie: {
     name: 'token',
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
+  },
+  sessionDateCookie: {
+    name: 'lastSessionDateSet',
+    ttl: null,
+    isSecure: false,
+    isSameSite: false
   },
   redirectOnTry: true,
   redirectTo: false, // defaults to routes.login w/ host redirect
@@ -60,6 +67,7 @@ exports.plugin = {
     const expose = {
       updateMeta,
       updateSettings,
+      updateLastSessionDate,
       config,
       getMe: getMe.bind(config),
       getUser: getUser.bind(config),

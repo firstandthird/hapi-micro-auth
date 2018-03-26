@@ -28,6 +28,15 @@ lab.experiment('server actions', () => {
     });
 
     authServer.route({
+      path: '/api/users',
+      method: 'put',
+      handler(r, h) {
+        code.expect(r.payload.token).to.equal('aToken');
+        return { _id: '5678' };
+      }
+    });
+
+    authServer.route({
       path: '/api/users/meta',
       method: 'put',
       handler(r, h) {
@@ -321,6 +330,20 @@ lab.experiment('server actions', () => {
       }
     });
     const result = await server.microauth.updateSettings('anotherToken', { meta1: 'setatron' });
+    code.expect(result._id).to.equal('5678');
+  });
+
+  lab.test('it should provide updateLastSessionDate function', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        routes: true,
+        cacheEnabled: false
+      }
+    });
+    const result = await server.microauth.updateLastSessionDate('aToken');
     code.expect(result._id).to.equal('5678');
   });
 });
