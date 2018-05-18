@@ -29,7 +29,6 @@ lab.experiment('plugin registration', () => {
     code.expect(server.microauth.updateSettings).to.be.a.function();
     code.expect(server.microauth.getTokenFromRequest).to.be.a.function();
     code.expect(server.microauth.userCache).to.be.an.object();
-
   });
 
   lab.test('it should throw an error if host is not set', async() => {

@@ -32,7 +32,9 @@ lab.experiment('server actions', () => {
       method: 'put',
       handler(r, h) {
         code.expect(r.payload.token).to.equal('aToken');
-        return { _id: '5678' };
+        const result = Object.assign({}, r.payload);
+        result._id = '5678';
+        return result;
       }
     });
 
@@ -63,7 +65,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should protect routes', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -100,7 +102,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should protect routes without cache enabled', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -136,11 +138,10 @@ lab.experiment('server actions', () => {
     code.expect(resultTwo.statusCode).to.equal(200);
 
     await server.stop();
-
   });
 
   lab.test('it should support try mode', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -173,7 +174,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getMe function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -188,7 +189,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getUser function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -203,7 +204,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getTokenFromRequest function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -225,7 +226,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support setCookie', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -239,9 +240,9 @@ lab.experiment('server actions', () => {
 
     server.microauth.setCookie({
       state(cookieName, token, cache) {
-          code.expect(cookieName).to.equal('token');
-          code.expect(token).to.equal('broken');
-          code.expect(cache.ttl).to.equal(2592000000);
+        code.expect(cookieName).to.equal('token');
+        code.expect(token).to.equal('broken');
+        code.expect(cache.ttl).to.equal(2592000000);
       }
     }, 'broken');
 
@@ -249,7 +250,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support redirectTo', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -306,7 +307,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateMeta function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -320,7 +321,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateMeta function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -334,7 +335,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateLastSessionDate function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: [ '*' ] } });
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -343,7 +344,9 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    const result = await server.microauth.updateLastSessionDate('aToken');
+    const result = await server.microauth.updateLastSessionDate('aToken', 'Wonder Woman/X-Men 1.0');
+    code.expect(result.userAgent).to.equal('Wonder Woman/X-Men 1.0');
+    code.expect(result.incSessions).to.equal(1);
     code.expect(result._id).to.equal('5678');
   });
 });
