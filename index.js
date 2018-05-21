@@ -42,7 +42,8 @@ const defaults = {
     name: 'microauth',
     mode: 'required'
   },
-  noRedirect: false
+  noRedirect: false,
+  setDefault: true
 };
 
 exports.plugin = {
@@ -85,7 +86,9 @@ exports.plugin = {
 
     if (config.strategy) {
       server.auth.strategy(config.strategy.name, 'microauth');
-      server.auth.default({ strategy: config.strategy.name, mode: config.strategy.mode });
+      if (config.setDefault) {
+        server.auth.default({ strategy: config.strategy.name, mode: config.strategy.mode });
+      }
     }
 
     if (config.routes) {
