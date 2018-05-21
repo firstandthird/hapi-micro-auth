@@ -28,7 +28,8 @@ const defaults = {
   redirectTo: false, // defaults to routes.login w/ host redirect
   routes: {
     login: '/login',
-    logout: '/logout'
+    logout: '/logout',
+    hook: '/hook'
   },
   cacheEnabled: true,
   cache: {

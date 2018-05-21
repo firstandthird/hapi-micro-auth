@@ -346,4 +346,34 @@ lab.experiment('server actions', () => {
     const result = await server.microauth.updateLastSessionDate('aToken');
     code.expect(result._id).to.equal('5678');
   });
+
+  lab.test('it should provide a hook route', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        cacheEnabled: false
+      }
+    });
+    server.event('microauth.user.register');
+    server.events.on('microauth.user.register', (payload) => {
+      code.expect(payload).to.equal({
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      });
+    });
+
+    const result = await server.inject({
+      method: 'post',
+      url: '/hook',
+      payload: {
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      }
+    });
+    code.expect(result.statusCode).to.equal(200);
+  });
 });
