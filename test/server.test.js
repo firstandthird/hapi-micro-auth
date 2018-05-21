@@ -376,4 +376,38 @@ lab.experiment('server actions', () => {
     });
     code.expect(result.statusCode).to.equal(200);
   });
+
+  lab.test.only('it should be able to protect a hook route', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        hookToken: '7823478234243',
+        cacheEnabled: false
+      }
+    });
+    server.event('microauth.user.register');
+
+    const result = await server.inject({
+      method: 'post',
+      url: '/hook',
+      payload: {
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      }
+    });
+    code.expect(result.statusCode).to.equal(401);
+
+    const result2 = await server.inject({
+      method: 'post',
+      url: '/hook?token=7823478234243',
+      payload: {
+        event: 'user.register',
+        userId: 888
+      }
+    });
+    code.expect(result2.statusCode).to.equal(200);
+  });
 });
