@@ -377,7 +377,7 @@ lab.experiment('server actions', () => {
     code.expect(result.statusCode).to.equal(200);
   });
 
-  lab.test.only('it should be able to protect a hook route', async() => {
+  lab.test('it should be able to protect a hook route', async() => {
     const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
