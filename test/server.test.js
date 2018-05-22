@@ -367,7 +367,7 @@ lab.experiment('server actions', () => {
 
     const result = await server.inject({
       method: 'post',
-      url: '/hook',
+      url: '/auth-hook',
       payload: {
         event: 'user.register',
         userId: 777,
@@ -391,7 +391,7 @@ lab.experiment('server actions', () => {
 
     const result = await server.inject({
       method: 'post',
-      url: '/hook',
+      url: '/auth-hook',
       payload: {
         event: 'user.register',
         userId: 777,
@@ -402,7 +402,7 @@ lab.experiment('server actions', () => {
 
     const result2 = await server.inject({
       method: 'post',
-      url: '/hook?token=7823478234243',
+      url: '/auth-hook?token=7823478234243',
       payload: {
         event: 'user.register',
         userId: 888
