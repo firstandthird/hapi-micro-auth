@@ -31,7 +31,7 @@ const defaults = {
     logout: '/logout',
     hook: '/auth-hook'
   },
-  hookToken: false,
+  hookSecret: false,
   cacheEnabled: true,
   cache: {
     segment: 'microauth-sessions',

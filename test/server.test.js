@@ -383,7 +383,7 @@ lab.experiment('server actions', () => {
       plugin: require('../'),
       options: {
         host: 'http://localhost:8081',
-        hookToken: '7823478234243',
+        hookSecret: '7823478234243',
         cacheEnabled: false
       }
     });
@@ -402,7 +402,7 @@ lab.experiment('server actions', () => {
 
     const result2 = await server.inject({
       method: 'post',
-      url: '/auth-hook?token=7823478234243',
+      url: '/auth-hook?secret=7823478234243',
       payload: {
         event: 'user.register',
         userId: 888
