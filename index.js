@@ -29,7 +29,7 @@ const defaults = {
   routes: {
     login: '/login',
     logout: '/logout',
-    hook: '/hook'
+    hook: '/auth-hook'
   },
   hookToken: false,
   cacheEnabled: true,
