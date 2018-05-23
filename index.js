@@ -32,6 +32,7 @@ const defaults = {
     hook: '/auth-hook'
   },
   hookSecret: false,
+  hookEventNamespace: 'microauth',
   cacheEnabled: true,
   cache: {
     segment: 'microauth-sessions',

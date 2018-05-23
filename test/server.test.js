@@ -359,7 +359,6 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    server.event('microauth.user.register');
     server.events.on('microauth.user.register', (payload) => {
       code.expect(payload).to.equal({
         event: 'user.register',
@@ -390,7 +389,6 @@ lab.experiment('server actions', () => {
         cacheEnabled: false
       }
     });
-    server.event('microauth.user.register');
 
     const result = await server.inject({
       method: 'post',
