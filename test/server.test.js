@@ -346,4 +346,68 @@ lab.experiment('server actions', () => {
     const result = await server.microauth.updateLastSessionDate('aToken');
     code.expect(result._id).to.equal('5678');
   });
+
+  lab.test('it should provide a hook route', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        cacheEnabled: false
+      }
+    });
+    server.event('microauth.user.register');
+    server.events.on('microauth.user.register', (payload) => {
+      code.expect(payload).to.equal({
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      });
+    });
+
+    const result = await server.inject({
+      method: 'post',
+      url: '/auth-hook',
+      payload: {
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      }
+    });
+    code.expect(result.statusCode).to.equal(200);
+  });
+
+  lab.test('it should be able to protect a hook route', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        hookSecret: '7823478234243',
+        cacheEnabled: false
+      }
+    });
+    server.event('microauth.user.register');
+
+    const result = await server.inject({
+      method: 'post',
+      url: '/auth-hook',
+      payload: {
+        event: 'user.register',
+        userId: 777,
+        moreData: 'sure'
+      }
+    });
+    code.expect(result.statusCode).to.equal(401);
+
+    const result2 = await server.inject({
+      method: 'post',
+      url: '/auth-hook?secret=7823478234243',
+      payload: {
+        event: 'user.register',
+        userId: 888
+      }
+    });
+    code.expect(result2.statusCode).to.equal(200);
+  });
 });
