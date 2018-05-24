@@ -31,7 +31,7 @@ lab.experiment('server actions', () => {
       path: '/api/users',
       method: 'put',
       handler(r, h) {
-        code.expect(r.payload.token).to.equal('aToken');
+        code.expect(r.query.token).to.equal('aToken');
         const result = Object.assign({}, r.payload);
         result._id = '5678';
         return result;
