@@ -18,6 +18,7 @@ const defaults = {
     name: 'token',
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
   },
+  trackLastSession: false,
   sessionDateCookie: {
     name: 'lastSessionDateSet',
     ttl: null,
