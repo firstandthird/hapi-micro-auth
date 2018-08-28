@@ -411,4 +411,55 @@ lab.experiment('server actions', () => {
     });
     code.expect(result2.statusCode).to.equal(200);
   });
+
+  lab.test('it should not set lastSessionDate cookie by default', async () => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081'
+      }
+    });
+
+    server.route({
+      path: '/main',
+      method: 'get',
+      handler(r, h) {
+        return 'success';
+      }
+    });
+
+    const resp = await server.inject({
+      method: 'get',
+      url: '/main?token=aToken'
+    });
+
+    code.expect(resp.request._states).to.equal({});
+  });
+
+  lab.test.only('it should set lastSessionDate with option', async () => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        trackLastSession: true
+      }
+    });
+
+    server.route({
+      path: '/main',
+      method: 'get',
+      handler(r, h) {
+        return 'success';
+      }
+    });
+
+    const resp = await server.inject({
+      method: 'get',
+      url: '/main?token=aToken'
+    });
+
+    code.expect(Object.keys(resp.request._states)).to.equal(['lastSessionDateSet']);
+  });
 });
