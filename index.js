@@ -61,7 +61,7 @@ exports.plugin = {
       config.hostRedirect = config.host;
     }
 
-    config.cache.generateFunc = async (id, done) => {
+    config.cache.generateFunc = async (id) => {
       if (config.verbose) {
         server.log(['hapi-micro-auth', 'cache-miss'], `Fetching user ${id}`);
       }
