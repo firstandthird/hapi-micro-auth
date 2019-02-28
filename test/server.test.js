@@ -239,10 +239,9 @@ lab.experiment('server actions', () => {
     await server.start();
 
     server.microauth.setCookie({
-      state(cookieName, token, cache) {
+      state(cookieName, token) {
         code.expect(cookieName).to.equal('token');
         code.expect(token).to.equal('broken');
-        code.expect(cache.ttl).to.equal(2592000000);
       }
     }, 'broken');
 

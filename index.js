@@ -16,6 +16,7 @@ const defaults = {
   queryKey: 'token',
   cookie: {
     name: 'token',
+    isSecure: false,
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
   },
   trackLastSession: true,
@@ -53,7 +54,11 @@ const defaults = {
 exports.plugin = {
   register(server, options) {
     const config = aug(defaults, options);
-
+    // register the auth cookie's options with the server:
+    server.state(config.cookie.name, {
+      ttl: config.cookie.ttl,
+      isSecure: config.cookie.isSecure
+    });
     if (!config.host) {
       throw new Error('host must be set');
     }
