@@ -24,18 +24,18 @@
   },
   "homepage": "https://github.com/firstandthird/hapi-micro-auth#readme",
   "dependencies": {
-    "aug": "^2.0.0",
+    "aug": "^3.0.1",
     "boom": "^7.1.1",
-    "wreck": "^14.0.2"
+    "wreck": "^14.2.0"
   },
   "devDependencies": {
     "code": "^5.1.2",
-    "coveralls": "^3.0.0",
-    "eslint": "^4.18.1",
+    "coveralls": "^3.0.3",
+    "eslint": "^5.16.0",
     "eslint-config-firstandthird": "^4.3.0",
-    "eslint-plugin-import": "^2.9.0",
-    "hapi": "^18.0.0",
-    "lab": "^15.1.2"
+    "eslint-plugin-import": "^2.17.2",
+    "hapi": "^18.1.0",
+    "lab": "^18.0.2"
   },
   "eslintConfig": {
     "extends": "firstandthird"
