@@ -18,6 +18,7 @@ const defaults = {
     name: 'token',
     isSecure: false,
     ttl: 1000 * 60 * 60 * 24 * 30, //30 days
+    clearInvalid: false
   },
   trackLastSession: true,
   sessionDateCookie: {
@@ -57,7 +58,8 @@ exports.plugin = {
     // register the auth cookie's options with the server:
     server.state(config.cookie.name, {
       ttl: config.cookie.ttl,
-      isSecure: config.cookie.isSecure
+      isSecure: config.cookie.isSecure,
+      clearInvalid: config.cookie.clearInvalid
     });
     if (!config.host) {
       throw new Error('host must be set');
