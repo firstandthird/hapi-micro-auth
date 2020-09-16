@@ -25,7 +25,7 @@ const defaults = {
     name: 'lastSessionDateSet',
     ttl: null,
     isSecure: false,
-    isSameSite: false
+    isSameSite: 'Lax'
   },
   redirectOnTry: true,
   redirectTo: false, // defaults to routes.login w/ host redirect
