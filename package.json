@@ -1,6 +1,6 @@
 {
   "name": "hapi-micro-auth",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "Hapi plugin for micro-auth",
   "main": "index.js",
   "scripts": {
