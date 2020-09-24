@@ -19,6 +19,15 @@ lab.experiment('server actions', () => {
     });
 
     authServer.route({
+      path: '/api/users/list',
+      method: 'get',
+      handler(r, h) {
+        code.expect(r.query.email).to.equal('temp@email.com');
+        return { _id: '5678' };
+      }
+    });
+
+    authServer.route({
       path: '/api/users/{token}',
       method: 'get',
       handler(r, h) {
@@ -186,6 +195,21 @@ lab.experiment('server actions', () => {
 
     const user = await server.microauth.getMe('aToken');
     code.expect(user._id).to.equal('1234');
+  });
+
+  lab.test('it should provide list function', async() => {
+    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    await server.register({
+      plugin: require('../'),
+      options: {
+        host: 'http://localhost:8081',
+        routes: true,
+        cacheEnabled: false
+      }
+    });
+
+    const user = await server.microauth.list('temp@email.com');
+    code.expect(user._id).to.equal('5678');
   });
 
   lab.test('it should provide getUser function', async() => {
