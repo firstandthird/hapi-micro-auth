@@ -23,7 +23,7 @@ lab.experiment('server actions', () => {
       method: 'get',
       handler(r, h) {
         code.expect(r.query.email).to.equal('temp@email.com');
-        return { _id: '5678' };
+        return { more: false, users: [{ _id: '5678' }] };
       }
     });
 
@@ -208,8 +208,8 @@ lab.experiment('server actions', () => {
       }
     });
 
-    const user = await server.microauth.list('temp@email.com');
-    code.expect(user._id).to.equal('5678');
+    const userList = await server.microauth.list({ email: 'temp@email.com' });
+    code.expect(userList[0]._id).to.equal('5678');
   });
 
   lab.test('it should provide getUser function', async() => {
