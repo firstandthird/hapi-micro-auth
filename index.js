@@ -1,5 +1,6 @@
 const aug = require('aug');
 const getMe = require('./lib/getMe');
+const list = require('./lib/list');
 const getUser = require('./lib/getUser');
 const getTokenFromRequest = require('./lib/getTokenFromRequest');
 const updateLastSessionDate = require('./lib/updateLastSessionDate');
@@ -81,6 +82,7 @@ exports.plugin = {
       updateSettings,
       updateLastSessionDate,
       config,
+      list: list.bind(config),
       getMe: getMe.bind(config),
       getUser: getUser.bind(config),
       getTokenFromRequest: getTokenFromRequest.bind(config),
