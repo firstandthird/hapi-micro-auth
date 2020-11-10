@@ -1,14 +1,14 @@
-const Lab = require('lab');
+const Lab = require('@hapi/lab');
 const lab = exports.lab = Lab.script();
-const code = require('code');
+const code = require('@hapi/code');
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 
 lab.experiment('server actions', () => {
   let authServer;
 
   lab.before(async() => {
-    authServer = new Hapi.Server({ port: 8081 });
+    authServer = Hapi.server({ port: 8081 });
     authServer.route({
       path: '/api/me/{token}',
       method: 'get',
@@ -19,7 +19,7 @@ lab.experiment('server actions', () => {
     });
 
     authServer.route({
-      path: '/api/users/list',
+      path: '/api/users',
       method: 'get',
       handler(r, h) {
         code.expect(r.query.email).to.equal('temp@email.com');
@@ -74,7 +74,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should protect routes', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -111,7 +111,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should protect routes without cache enabled', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -150,7 +150,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support try mode', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -183,7 +183,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getMe function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -198,7 +198,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide list function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -213,7 +213,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getUser function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -228,7 +228,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide getTokenFromRequest function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -250,7 +250,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support setCookie', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -273,7 +273,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support redirectTo', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -302,7 +302,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should support noRedirect', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -330,7 +330,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateMeta function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -344,7 +344,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateMeta function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -358,7 +358,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide updateLastSessionDate function', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -374,7 +374,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should provide a hook route', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -403,7 +403,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should be able to protect a hook route', async() => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -436,7 +436,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should not set lastSessionDate cookie with option', async () => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
@@ -462,7 +462,7 @@ lab.experiment('server actions', () => {
   });
 
   lab.test('it should set lastSessionDate by default', async () => {
-    const server = new Hapi.Server({ port: 8082, debug: { log: ['*'] } });
+    const server = Hapi.server({ port: 8082, debug: { log: ['*'] } });
     await server.register({
       plugin: require('../'),
       options: {
