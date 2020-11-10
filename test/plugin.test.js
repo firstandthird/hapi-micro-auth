@@ -1,14 +1,14 @@
 'use strict';
 
-const Lab = require('lab');
+const Lab = require('@hapi/lab');
 const lab = exports.lab = Lab.script();
-const code = require('code');
+const code = require('@hapi/code');
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 
 lab.experiment('plugin registration', () => {
   lab.test('it should register if passed valid options', async() => {
-    const server = new Hapi.Server();
+    const server = Hapi.server();
     try {
       await server.register({
         plugin: require('../'),
@@ -32,7 +32,7 @@ lab.experiment('plugin registration', () => {
   });
 
   lab.test('it should throw an error if host is not set', async() => {
-    const server = new Hapi.Server();
+    const server = Hapi.server();
     await code.expect(server.register(require('../'))).to.reject();
   });
 });
